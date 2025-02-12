@@ -17,7 +17,6 @@ namespace EnglishQuizApp.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Ensures CorrectAnswerId is a foreign key (optional but recommended)
             modelBuilder.Entity<Question>()
                 .HasOne<AnswerOption>()
                 .WithMany()
