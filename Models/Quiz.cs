@@ -4,7 +4,6 @@ namespace EnglishQuizApp.Models
 {
     public class Quiz
     {
-        [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required(ErrorMessage = "Quiz title is required")]

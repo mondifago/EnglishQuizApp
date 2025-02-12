@@ -4,7 +4,6 @@ namespace EnglishQuizApp.Models
 {
     public class GameSession
     {
-        [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
