@@ -4,10 +4,11 @@ namespace EnglishQuizApp.Models
 {
     public class Quiz
     {
+        [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required(ErrorMessage = "Quiz title is required")]
-        [StringLength(200, ErrorMessage = "Title can't exceed 200 characters")]
+        [StringLength(20, ErrorMessage = "Title can't exceed 20 characters")]
         public string Title { get; set; }
 
         public List<Question> QuestionPool { get; set; } = new();

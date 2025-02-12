@@ -5,6 +5,7 @@
 
     public class Player
     {
+        [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required(ErrorMessage = "Name is required")]
