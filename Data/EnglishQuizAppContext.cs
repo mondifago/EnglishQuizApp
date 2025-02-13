@@ -12,15 +12,29 @@ namespace EnglishQuizApp.Data
         public DbSet<GameSession> GameSessions { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<AnswerOption> AnswerOptions { get; set; }
+        public DbSet<PlayerAnswer> PlayerAnswers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<PlayerAnswer>()
+                .HasOne(pa => pa.Question)
+                .WithMany() // Avoid navigation loop
+                .HasForeignKey(pa => pa.QuestionId)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
 
-            modelBuilder.Entity<Question>()
-                .HasOne<AnswerOption>()
+            modelBuilder.Entity<PlayerAnswer>()
+                .HasOne(pa => pa.SelectedAnswer)
+                .WithMany() // Avoid navigation loop
+                .HasForeignKey(pa => pa.SelectedAnswerId)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+
+            modelBuilder.Entity<PlayerAnswer>()
+                .HasOne(pa => pa.GameSession)
                 .WithMany()
-                .HasForeignKey(q => q.CorrectAnswerId);
+                .HasForeignKey(pa => pa.GameSessionId)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
         }
+
+
     }
 }
