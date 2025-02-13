@@ -17,7 +17,7 @@ namespace EnglishQuizApp.Models
         [Range(0, int.MaxValue, ErrorMessage = "Score cannot be negative")]
         public int Score { get; private set; }
 
-        public Dictionary<Question, AnswerOption> AnswersGiven { get; set; } = new();
+        public List<PlayerAnswer> AnswersGiven { get; set; } = new();
 
         public DateTime StartTime { get; private set; }
         public DateTime EndTime { get; private set; }
