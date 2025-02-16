@@ -1,0 +1,64 @@
+﻿@page "/questions"
+@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+@using EnglishQuizApp.Models
+@using EnglishQuizApp.Data
+@inject NavigationManager Navigation
+@inject IDbContextFactory<EnglishQuizAppContext> DbFactory
+
+<h3>Questions</h3>
+<button @onclick="TestClick" class="btn btn-secondary">Test Click</button>
+<button @onclick="GoToCreatePage" class="btn btn-primary">Add New Question</button>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var question in Questions)
+        {
+            <tr>
+                <td>@question.Text</td>
+                <td>
+                    <button @onclick="() => EditQuestion(question.Id)" class="btn btn-warning">Edit</button>
+                    <button @onclick="() => DeleteQuestion(question.Id)" class="btn btn-danger">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Question> Questions = new();
+    private EnglishQuizAppContext _context;
+
+    private void TestClick()
+    {
+        Console.WriteLine("Button Clicked!"); 
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _context = await DbFactory.CreateDbContextAsync();
+        Questions = await _context.Questions.Include(q => q.Options).ToListAsync();
+    }
+
+    private void GoToCreatePage()
+    {
+        Navigation.NavigateTo("/questions/create");
+    }
+
+    private void EditQuestion(Guid id) => Navigation.NavigateTo($"/questions/edit/{id}");
+    private void DeleteQuestion(Guid id) => Navigation.NavigateTo($"/questions/delete/{id}");
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_context != null)
+        {
+            await _context.DisposeAsync();
+        }
+    }
+}

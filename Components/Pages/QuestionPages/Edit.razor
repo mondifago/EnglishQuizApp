@@ -1,0 +1,68 @@
+﻿@page "/questions/edit/{id:guid}"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using EnglishQuizApp.Models
+@using EnglishQuizApp.Data
+@inject NavigationManager Navigation
+@inject IDbContextFactory<EnglishQuizApp.Data.EnglishQuizAppContext> DbFactory
+
+<h3>Edit Question</h3>
+
+<EditForm Model="EditableQuestion" OnValidSubmit="UpdateQuestion">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label>Question Text:</label>
+        <InputText @bind-Value="EditableQuestion.Text" class="form-control" />
+    </div>
+
+    <h4>Answer Options</h4>
+    <div>
+        @foreach (var option in EditableQuestion.Options)
+        {
+            <p>@option.Text <button @onclick="() => RemoveOption(option)" class="btn btn-sm btn-danger">X</button></p>
+        }
+    </div>
+    <InputText @bind-Value="NewOptionText" class="form-control" placeholder="New Answer Option" />
+    <button @onclick="AddOption" class="btn btn-sm btn-secondary">Add Option</button>
+
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary">Update</button>
+        <button @onclick="Cancel" class="btn btn-secondary">Cancel</button>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+    private Question EditableQuestion = new();
+    private string NewOptionText = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = await DbFactory.CreateDbContextAsync();
+        EditableQuestion = await context.Questions.Include(q => q.Options)
+                         .FirstOrDefaultAsync(q => q.Id == Id) ?? new Question();
+    }
+
+    void AddOption()
+    {
+        if (!string.IsNullOrWhiteSpace(NewOptionText))
+        {
+            EditableQuestion.Options.Add(new AnswerOption { Text = NewOptionText });
+            NewOptionText = "";
+        }
+    }
+
+    void RemoveOption(AnswerOption option) => EditableQuestion.Options.Remove(option);
+
+    async Task UpdateQuestion()
+    {
+        using var context = await DbFactory.CreateDbContextAsync();
+        context.Questions.Update(EditableQuestion);
+        await context.SaveChangesAsync();
+        Navigation.NavigateTo("/questions");
+    }
+
+    void Cancel() => Navigation.NavigateTo("/questions");
+}

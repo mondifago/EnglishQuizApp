@@ -1,0 +1,25 @@
+﻿@page "/ugo"
+@inherits LayoutComponentBase
+
+<PageTitle>Ugo</PageTitle>
+
+<div class="main">
+    <header>
+        <h1>Welcome Ugo</h1>
+    </header>
+
+    <div class="content">
+        @Body
+        @welcomeMessage
+        this is the story of a good man
+       
+    </div>
+
+    <footer>
+        This is the footer
+    </footer>
+</div>
+
+@code {
+    private string welcomeMessage = "We ❤️ Blazor!";
+}

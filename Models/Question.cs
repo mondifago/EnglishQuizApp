@@ -4,6 +4,10 @@ namespace EnglishQuizApp.Models
 {
     public class Question
     {
+        public Question()
+        {
+            Options = new List<AnswerOption>();
+        }
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required(ErrorMessage = "Question text is required")]
@@ -13,5 +17,6 @@ namespace EnglishQuizApp.Models
 
         [Required(ErrorMessage = "Correct answer is required")]
         public Guid CorrectAnswerId { get; set; }
+
     }
 }
