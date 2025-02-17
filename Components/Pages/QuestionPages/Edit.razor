@@ -1,4 +1,5 @@
 ﻿@page "/questions/edit/{id:guid}"
+@rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using EnglishQuizApp.Models
@@ -8,10 +9,9 @@
 
 <h3>Edit Question</h3>
 
-<EditForm Model="EditableQuestion" OnValidSubmit="UpdateQuestion">
+<EditForm Model="EditableQuestion" OnValidSubmit="UpdateQuestion" FormName="editQuestionForm">
     <DataAnnotationsValidator />
     <ValidationSummary />
-
     <div class="mb-3">
         <label>Question Text:</label>
         <InputText @bind-Value="EditableQuestion.Text" class="form-control" />
@@ -21,15 +21,19 @@
     <div>
         @foreach (var option in EditableQuestion.Options)
         {
-            <p>@option.Text <button @onclick="() => RemoveOption(option)" class="btn btn-sm btn-danger">X</button></p>
+            <p>
+                @option.Text
+                <button type="button" @onclick="() => RemoveOption(option)" class="btn btn-sm btn-danger">X</button>
+            </p>
         }
     </div>
+
     <InputText @bind-Value="NewOptionText" class="form-control" placeholder="New Answer Option" />
-    <button @onclick="AddOption" class="btn btn-sm btn-secondary">Add Option</button>
+    <button type="button" @onclick="AddOption" class="btn btn-sm btn-secondary">Add Option</button>
 
     <div class="mt-3">
         <button type="submit" class="btn btn-primary">Update</button>
-        <button @onclick="Cancel" class="btn btn-secondary">Cancel</button>
+        <button type="button" @onclick="Cancel" class="btn btn-secondary">Cancel</button>
     </div>
 </EditForm>
 
@@ -55,7 +59,6 @@
     }
 
     void RemoveOption(AnswerOption option) => EditableQuestion.Options.Remove(option);
-
     async Task UpdateQuestion()
     {
         using var context = await DbFactory.CreateDbContextAsync();
@@ -63,6 +66,7 @@
         await context.SaveChangesAsync();
         Navigation.NavigateTo("/questions");
     }
+    
 
     void Cancel() => Navigation.NavigateTo("/questions");
 }

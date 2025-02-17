@@ -18,21 +18,21 @@ namespace EnglishQuizApp.Data
         {
             modelBuilder.Entity<PlayerAnswer>()
                 .HasOne(pa => pa.Question)
-                .WithMany() // Avoid navigation loop
+                .WithMany()
                 .HasForeignKey(pa => pa.QuestionId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<PlayerAnswer>()
                 .HasOne(pa => pa.SelectedAnswer)
-                .WithMany() // Avoid navigation loop
+                .WithMany()
                 .HasForeignKey(pa => pa.SelectedAnswerId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<PlayerAnswer>()
                 .HasOne(pa => pa.GameSession)
                 .WithMany()
                 .HasForeignKey(pa => pa.GameSessionId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
 
